@@ -103,7 +103,6 @@ void calibrate_encoder(EncoderStruct *encoder, ControllerStruct *controller, Cal
 			int count_ref = cal->theta_ref * (float)ENC_CPR/(2.0f*PI_F*PPAIRS);
 			int error = encoder->raw - count_ref;//- encoder->raw;
 			cal->error_arr[cal->sample_count] = error + ENC_CPR*(error<0);
-			printf("%d %d %d %.3f\r\n", cal->sample_count, count_ref, cal->error_arr[cal->sample_count], cal->theta_ref);
 			cal->next_sample_time += 2.0f*PI_F/(W_CAL*SAMPLES_PER_PPAIR);
 			if(cal->sample_count == PPAIRS*SAMPLES_PER_PPAIR-1){
 				return;
@@ -128,7 +127,6 @@ void calibrate_encoder(EncoderStruct *encoder, ControllerStruct *controller, Cal
 			error = error + ENC_CPR*(error<0);
 
 			cal->error_arr[cal->sample_count] = (cal->error_arr[cal->sample_count] + error)/2;
-			printf("%d %d %d %.3f\r\n", cal->sample_count, count_ref, cal->error_arr[cal->sample_count], cal->theta_ref);
 			cal->sample_count--;
 			cal->next_sample_time += 2.0f*PI_F/(W_CAL*SAMPLES_PER_PPAIR);
 		}
@@ -160,8 +158,6 @@ void calibrate_encoder(EncoderStruct *encoder, ControllerStruct *controller, Cal
 			int lut_index = lut_offset + i;
 			if(lut_index>(N_LUT-1)){lut_index -= N_LUT;}
 			cal->lut_arr[lut_index] = moving_avg - cal->ezero;
-			printf("%d  %d\r\n", lut_index, moving_avg - cal->ezero);
-
 		}
 
 	cal->started = 0;
