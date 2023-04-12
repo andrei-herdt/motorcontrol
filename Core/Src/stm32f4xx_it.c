@@ -245,7 +245,7 @@ void CAN1_RX0_IRQHandler(void) {
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
   // HAL_GPIO_WritePin(LED, GPIO_PIN_SET );	// Useful for timing
-  analog_sample(&controller);
+  // analog_sample(&controller);
   // HAL_GPIO_WritePin(LED, GPIO_PIN_RESET );	// Useful for timing
 }
 
@@ -256,25 +256,25 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
 void TIM1_UP_TIM10_IRQHandler(void) {
   /* USER CODE BEGIN TIM1_UP_TIM10_IRQn 0 */
   int cntr_up = 0;  //(htim1.Instance->CNT > 0x8CA/2);
-  if (!cntr_up) {
+
+  if (!(cntr_up) && (controller.num_pwms_passed >= controller.adc_pwm_divider - 1)) {
     uint32_t t_start = htim7.Instance->CNT;
     save_tick(0x01, t_start);
     save_tick(0x99, htim1.Instance->CNT);
 
     /* Sample ADCs */
-    // analog_sample(&controller);
+    analog_sample(&controller);
 
     uint32_t t_adcs = htim7.Instance->CNT;
     save_tick(0x11, t_adcs);
+    /* Sample position sensor */
+    ps_sample(&comm_encoder, DT);
   }
   /* USER CODE END TIM1_UP_TIM10_IRQn 0 */
   HAL_TIM_IRQHandler(&htim1);
   /* USER CODE BEGIN TIM1_UP_TIM10_IRQn 1 */
   // HAL_GPIO_WritePin(LED, GPIO_PIN_SET );	// Useful for timing
-  if (!cntr_up) {
-    /* Sample position sensor */
-    ps_sample(&comm_encoder, DT);
-
+  if (!(cntr_up) && (controller.num_pwms_passed >= controller.adc_pwm_divider - 1)) {
     // uint32_t t_encoder = htim7.Instance->CNT;
     // save_tick(0x21, t_encoder);
 
@@ -292,6 +292,16 @@ void TIM1_UP_TIM10_IRQHandler(void) {
 
     uint32_t t_end = htim7.Instance->CNT;
     save_tick(0x02, t_end);
+  }
+
+  // if (controller.num_pwms_passed == controller.adc_pwm_divider - 1) {
+  //   set_dtc(&controller);
+  // }
+
+  if (controller.num_pwms_passed >= controller.adc_pwm_divider - 1) {
+    controller.num_pwms_passed = 0;
+  } else {
+    controller.num_pwms_passed++;
   }
   /* USER CODE END TIM1_UP_TIM10_IRQn 1 */
 }

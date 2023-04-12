@@ -149,6 +149,8 @@ void init_controller_params(ControllerStruct* controller) {
   {
     controller->inverter_tab[i] = 1.0f + 1.2f * exp(-0.0078125f * i / .032f);
   }
+  controller->adc_pwm_divider = 4;
+  controller->num_pwms_passed = 0;
 }
 
 void reset_foc(ControllerStruct* controller) {
@@ -233,7 +235,7 @@ void field_weaken(ControllerStruct* controller) {
 void commutate(ControllerStruct* controller, EncoderStruct* encoder) {
   /* Do Field Oriented Control */
 
-  HAL_GPIO_WritePin(LED, GPIO_PIN_ESET);
+  HAL_GPIO_WritePin(LED, GPIO_PIN_SET);
   controller->theta_elec = encoder->elec_angle;
   controller->dtheta_elec = encoder->elec_velocity;
   controller->dtheta_mech = encoder->velocity / GR;
