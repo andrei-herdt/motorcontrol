@@ -44,7 +44,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
- 
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -254,6 +254,13 @@ void CAN1_RX0_IRQHandler(void)
   /* USER CODE END CAN1_RX0_IRQn 1 */
 }
 
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  // HAL_GPIO_WritePin(LED, GPIO_PIN_SET );	// Useful for timing
+	  analog_sample(&controller);
+  // HAL_GPIO_WritePin(LED, GPIO_PIN_RESET );	// Useful for timing
+}
+
 /**
   * @brief This function handles TIM1 update interrupt and TIM10 global interrupt.
   */
@@ -267,7 +274,7 @@ void TIM1_UP_TIM10_IRQHandler(void)
 	  save_tick(0x99, htim1.Instance->CNT);
 
 	  /* Sample ADCs */
-	  analog_sample(&controller);
+	  // analog_sample(&controller);
 
 	  uint32_t t_adcs = htim7.Instance->CNT;
 	  save_tick(0x11, t_adcs);
@@ -280,14 +287,14 @@ void TIM1_UP_TIM10_IRQHandler(void)
 	  /* Sample position sensor */
 	  ps_sample(&comm_encoder, DT);
 
-	  uint32_t t_encoder = htim7.Instance->CNT;
-	  save_tick(0x21, t_encoder);
+	  // uint32_t t_encoder = htim7.Instance->CNT;
+	  // save_tick(0x21, t_encoder);
 
 	  /* Run Finite State Machine */
 	  run_fsm(&state);
 
-	  uint32_t t_fsm = htim7.Instance->CNT;
-	  save_tick(0x31, t_fsm);
+	  // uint32_t t_fsm = htim7.Instance->CNT;
+	  // save_tick(0x31, t_fsm);
 	  /* Check for CAN messages */
 	  can_tx_rx();
 

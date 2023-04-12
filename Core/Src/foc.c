@@ -56,6 +56,7 @@ void analog_sample (ControllerStruct *controller){
 	HAL_GPIO_WritePin(LED, GPIO_PIN_RESET );
 
 
+    HAL_GPIO_WritePin(LED, GPIO_PIN_SET );	// Useful for timing
 	HAL_ADC_Start(&ADC_CH_MAIN);
 	HAL_ADC_PollForConversion(&ADC_CH_MAIN, HAL_MAX_DELAY);
 
@@ -65,6 +66,7 @@ void analog_sample (ControllerStruct *controller){
     controller->i_a = controller->i_scale*(float)(controller->adc_a_raw - controller->adc_a_offset);    // Calculate phase currents from ADC readings
     controller->i_b = controller->i_scale*(float)(controller->adc_b_raw - controller->adc_b_offset);
     controller->i_c = -controller->i_a - controller->i_b;
+	HAL_GPIO_WritePin(LED, GPIO_PIN_RESET );
 
 }
 
@@ -231,6 +233,7 @@ void commutate(ControllerStruct *controller, EncoderStruct *encoder)
 {
 	/* Do Field Oriented Control */
 
+	HAL_GPIO_WritePin(LED, GPIO_PIN_ESET );
 		controller->theta_elec = encoder->elec_angle;
 		controller->dtheta_elec = encoder->elec_velocity;
 		controller->dtheta_mech = encoder->velocity/GR;
@@ -278,6 +281,7 @@ void commutate(ControllerStruct *controller, EncoderStruct *encoder)
 
        set_dtc(controller);
 
+	HAL_GPIO_WritePin(LED, GPIO_PIN_RESET );
     }
 
 
