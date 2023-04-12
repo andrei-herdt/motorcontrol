@@ -42,6 +42,7 @@ void set_dtc(ControllerStruct *controller){
 void analog_sample (ControllerStruct *controller){
 	/* Sampe ADCs */
 	/* Handle phase order swapping so that voltage/current/torque match encoder direction */
+    HAL_GPIO_WritePin(LED, GPIO_PIN_SET );	// Useful for timing
 	if(!PHASE_ORDER){
 		controller->adc_a_raw = HAL_ADC_GetValue(&ADC_CH_IA);
 		controller->adc_b_raw = HAL_ADC_GetValue(&ADC_CH_IB);
@@ -52,6 +53,7 @@ void analog_sample (ControllerStruct *controller){
 		controller->adc_b_raw = HAL_ADC_GetValue(&ADC_CH_IA);
 		//adc_ch_ic = ADC_CH_IB;
 	}
+	HAL_GPIO_WritePin(LED, GPIO_PIN_RESET );
 
 
 	HAL_ADC_Start(&ADC_CH_MAIN);
