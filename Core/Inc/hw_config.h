@@ -39,8 +39,8 @@
 #define CAN_H hcan1  // CAN handle
 
 /* Other hardware-related constants */
-#define I_SCALE 0.0201416f  // Amps per A/D Count at 40X amplifier gain
-//#define I_SCALE 			0.0028773f  // Amps per A/D count at 40X
+//#define I_SCALE 0.0201416f  // Amps per A/D Count at 40X amplifier gain
+#define I_SCALE 0.0028773f  // Amps per A/D count at 40X
 // amplifier gain (0.0201416f/7)
 #define V_SCALE 0.0128906f      // Bus volts per A/D Count
 #define DTC_MAX 0.94f           // Max duty cycle
