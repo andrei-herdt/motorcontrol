@@ -18,9 +18,9 @@ T_MAX = 18.0
 I_MAX = 15.0
 
 position = 0.5
-velocity = 5.0
-kd = 1.0
-kp = 0.5 
+velocity = 0.5
+kd = 0.1
+kp = 1.0
 torque = 0.0
 
 # Enter Motor Mode
